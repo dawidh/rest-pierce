@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 @Service
 public class ImportFile {
     private static final Logger log = LoggerFactory.getLogger(ImportFile.class);
-    private final String splitSeparator = ",";
+    private final String splitSeparator = ";";
     private final AttributeService attributeService;
     private final AttributeTranslationService attributeTranslationService;
     private final LanguageService languageService;
