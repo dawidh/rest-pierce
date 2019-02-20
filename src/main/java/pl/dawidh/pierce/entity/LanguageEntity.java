@@ -19,6 +19,10 @@ public class LanguageEntity extends BaseData {
     public LanguageEntity() {
     }
 
+    public LanguageEntity(Long id) {
+        this.id = id;
+    }
+
     public LanguageEntity(@NotNull String code) {
         this.code = code;
     }

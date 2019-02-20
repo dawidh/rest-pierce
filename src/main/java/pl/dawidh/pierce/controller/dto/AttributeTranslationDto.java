@@ -19,6 +19,9 @@ public class AttributeTranslationDto extends BaseData {
                                    @NotNull Long languageId,
                                    @NotNull Long attributeId,
                                    @NotNull String translate) {
+        this.id = id;
+        this.created = created;
+        this.modified = modified;
         this.languageId = languageId;
         this.attributeId = attributeId;
         this.translate = translate;
@@ -54,5 +57,9 @@ public class AttributeTranslationDto extends BaseData {
 
     public void setTranslate(String translate) {
         this.translate = translate;
+    }
+
+    public String newRecordToString() {
+        return String.format("'%s', id = {%d}", translate, id);
     }
 }

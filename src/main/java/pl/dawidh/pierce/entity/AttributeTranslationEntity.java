@@ -32,6 +32,9 @@ public class AttributeTranslationEntity extends BaseData {
         this.translate = translate;
     }
 
+    public AttributeTranslationEntity() {
+    }
+
     public LanguageEntity getLanguage() {
         return language;
     }

@@ -56,9 +56,9 @@ public class ModelParseUtils {
         if(dto.getAttributeTranslations() == null || dto.getAttributeTranslations().isEmpty()){
             return new AttributeEntity(dto.getCode());
         } else {
-            var attributes = dto.getAttributeTranslations();
+            var attributes = attributeTranslationCollectionDtoToListEntity(dto.getAttributeTranslations());
             return new AttributeEntity(dto.getCode(),
-                    null);
+                    attributes);
         }
     }
 
@@ -75,12 +75,12 @@ public class ModelParseUtils {
                     sqlTimestampToLocalDateTime(entity.getModified()),
                     entity.getCode());
         } else {
-            var attributes = entity.getAttributeTranslations();
+            var attributes = attributeTranslationCollectionEntityToListDto(entity.getAttributeTranslations());
             return new AttributeDto(entity.getId(),
                     sqlTimestampToLocalDateTime(entity.getCreated()),
                     sqlTimestampToLocalDateTime(entity.getModified()),
                     entity.getCode(),
-                    null);
+                    attributes);
         }
     }
 
@@ -91,11 +91,16 @@ public class ModelParseUtils {
     }
 
     public static AttributeTranslationEntity attributeTranslationDtoToEntity(AttributeTranslationDto dto){
-        return new AttributeTranslationEntity(dto.getTranslate());
+        return new AttributeTranslationEntity(new LanguageEntity(dto.getLanguageId()),
+                new AttributeEntity(dto.getAttributeId()),
+                dto.getTranslate());
     }
 
     public static AttributeTranslationDto attributeTranslationEntityToDto(AttributeTranslationEntity entity){
-        return new AttributeTranslationDto(entity.getLanguage().getId(),
+        return new AttributeTranslationDto(entity.getId(),
+                sqlTimestampToLocalDateTime(entity.getCreated()),
+                sqlTimestampToLocalDateTime( entity.getModified()),
+                entity.getLanguage().getId(),
                 entity.getAttribute().getId(),
                 entity.getTranslate());
     }

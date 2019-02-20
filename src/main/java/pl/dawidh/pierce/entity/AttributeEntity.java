@@ -19,6 +19,10 @@ public class AttributeEntity extends BaseData {
     public AttributeEntity() {
     }
 
+    public AttributeEntity(Long id) {
+        this.id = id;
+    }
+
     public AttributeEntity(@NotNull String code) {
         this.code = code;
     }
