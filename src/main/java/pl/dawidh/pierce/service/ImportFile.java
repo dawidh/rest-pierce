@@ -8,6 +8,7 @@ import pl.dawidh.pierce.controller.dto.AttributeDto;
 import pl.dawidh.pierce.controller.dto.AttributeTranslationDto;
 import pl.dawidh.pierce.controller.dto.LanguageDto;
 import pl.dawidh.pierce.enums.DataFileTypeEnum;
+import pl.dawidh.pierce.exception.NotFoundException;
 
 import java.io.*;
 import java.util.*;
@@ -75,7 +76,7 @@ public class ImportFile {
     }
 
     private void extractData(File file) throws IOException {
-        AtomicInteger lineNumbers = new AtomicInteger();
+        var lineNumbers = new AtomicInteger();
         var reader = getCsvReader(new FileReader(file), getCsvParser(splitSeparator, false), 0);
         var languages = new ArrayList<LanguageDto>();
         var headers = new ArrayList<String>();
@@ -112,25 +113,39 @@ public class ImportFile {
     }
 
     private void addNewDataByFile(String filename, List<String> data, List<LanguageDto> languages, List<String> headers){
-        AtomicInteger i = new AtomicInteger();
-        var existingAttributes = new ArrayList<AttributeDto>();
         var dataType = DataFileTypeEnum.getDataTypeField(filename);
         if(dataType == DataFileTypeEnum.ATTRIBUTES){
-            existingAttributes.addAll(findAndAddNewAttributes(data.get(0)));
-            data.forEach(e -> {
-                if(i.get() != 0){
-                    var language = languages.stream()
-                            .filter(lang -> lang.getCode().equals(headers.get(i.get())))
-                            .findFirst();
-                    var attribute = existingAttributes.stream()
-                            .filter(attri -> attri.getCode().equals(data.get(0)))
-                            .findFirst();
-                    findAndAddAttributeTranslations(language.get(), attribute.get(), e);
-                }
-                i.addAndGet(1);
-            });
+            processAttributesFile(data, languages, headers);
+        } else if (dataType == DataFileTypeEnum.OPTIONS){
+            processOptionsFile();
+        } else {
+            throw new IllegalArgumentException(dataType.toString());
         }
+    }
 
+    private void processOptionsFile(){
+
+    }
+
+    private void processAttributesFile(List<String> data, List<LanguageDto> languages, List<String> headers){
+        var existingAttributes = findAndAddNewAttributes(data.get(0));
+        var i = new AtomicInteger();
+        data.forEach(e -> {
+            if(i.get() != 0){
+                var languageDto = languages.stream()
+                        .filter(language -> language.getCode().equals(headers.get(i.get())))
+                        .findFirst().orElseThrow(() -> {
+                            throw new NotFoundException();
+                        });
+                var attributeDto = existingAttributes.stream()
+                        .filter(attribute -> attribute.getCode().equals(data.get(0)))
+                        .findFirst().orElseThrow(() -> {
+                            throw new NotFoundException();
+                        });
+                findAndAddAttributeTranslations(languageDto, attributeDto, e);
+            }
+            i.addAndGet(1);
+        });
     }
 
     private List<AttributeDto> findAndAddNewAttributes(String newData){
