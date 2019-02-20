@@ -13,7 +13,7 @@ public class AttributeEntity extends BaseData {
     @NotNull
     private String code;
 
-    @OneToMany(mappedBy = "attribute", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "attribute")
     private Collection<AttributeTranslationEntity> attributeTranslations;
 
 

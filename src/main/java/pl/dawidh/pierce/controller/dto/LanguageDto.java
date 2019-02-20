@@ -1,6 +1,7 @@
 package pl.dawidh.pierce.controller.dto;
 
 import javax.validation.constraints.NotNull;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 public class LanguageDto extends BaseData {
@@ -8,6 +9,25 @@ public class LanguageDto extends BaseData {
     private String code;
 
     private Collection<AttributeTranslationDto> attributeTranslations;
+
+    public LanguageDto(@NotNull String code) {
+        this.code = code;
+    }
+
+    public LanguageDto(Long id, LocalDateTime created, LocalDateTime modified, @NotNull String code) {
+        this.id = id;
+        this.created = created;
+        this.modified = modified;
+        this.code = code;
+    }
+
+    public LanguageDto(Long id, LocalDateTime created, LocalDateTime modified, @NotNull String code, Collection<AttributeTranslationDto> attributeTranslations) {
+        this.id = id;
+        this.created = created;
+        this.modified = modified;
+        this.code = code;
+        this.attributeTranslations = attributeTranslations;
+    }
 
     public String getCode() {
         return code;
@@ -23,5 +43,9 @@ public class LanguageDto extends BaseData {
 
     public void setAttributeTranslations(Collection<AttributeTranslationDto> attributeTranslations) {
         this.attributeTranslations = attributeTranslations;
+    }
+
+    public String toStringForNewRecord() {
+        return String.format("'%s', id = {%d}", code, id);
     }
 }

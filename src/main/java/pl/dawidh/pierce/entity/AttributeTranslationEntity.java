@@ -7,7 +7,7 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "attributes")
+@Table(name = "attribute_translations")
 public class AttributeTranslationEntity extends BaseData {
     @ManyToOne
     @NotNull

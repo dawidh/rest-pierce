@@ -1,6 +1,5 @@
 package pl.dawidh.pierce.entity;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -13,8 +12,17 @@ public class LanguageEntity extends BaseData {
     @NotNull
     private String code;
 
-    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "language")
     private Collection<AttributeTranslationEntity> attributeTranslations;
+
+    public LanguageEntity(@NotNull String code) {
+        this.code = code;
+    }
+
+    public LanguageEntity(@NotNull String code, Collection<AttributeTranslationEntity> attributeTranslations) {
+        this.code = code;
+        this.attributeTranslations = attributeTranslations;
+    }
 
     public String getCode() {
         return code;

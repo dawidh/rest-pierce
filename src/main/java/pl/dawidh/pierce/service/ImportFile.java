@@ -1,22 +1,24 @@
 package pl.dawidh.pierce.service;
 
-import com.opencsv.CSVParser;
-import com.opencsv.CSVParserBuilder;
-import com.opencsv.CSVReader;
-import com.opencsv.CSVReaderBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.dawidh.pierce.controller.dto.LanguageDto;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+
+import static pl.dawidh.pierce.utils.CsvUtils.getCsvParser;
+import static pl.dawidh.pierce.utils.CsvUtils.getCsvReader;
 
 @Service
 public class ImportFile {
     private static final Logger log = LoggerFactory.getLogger(ImportFile.class);
-    private final String noFileMassage= "No file '%s'";
+    private final String noFileMassage = "No file '%s'";
+    private final String savedNewLanguageMassage = "New language saved %s";
     private final List<String> ignoredWords = Arrays.asList("attribute", "sort_order", "code");
     private final AttributeService attributeService;
     private final AttributeTranslationService attributeTranslationService;
@@ -49,9 +51,10 @@ public class ImportFile {
         Arrays.stream(fileNames.split(String.valueOf(splitSeparator)))
                 .map(fileName -> filePath + fileName)
                 .collect(Collectors.toList())
-                .forEach(file -> {
-                    if(new File(file).exists()){
-                        processImportedFile(new File(file));
+                .forEach(e -> {
+                    var file = new File(e);
+                    if(file.exists()){
+                        processImportedFile(file);
                     } else {
                         log.info(String.format(noFileMassage, file));
                     }
@@ -60,34 +63,42 @@ public class ImportFile {
 
     private void processImportedFile(File file){
         try {
-            test(file);
+            extractData(file);
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error(e.getMessage());
         }
     }
 
-    private void test(File file) throws IOException {
-        var reader = getCsvReader(new FileReader(file), getCsvParser(splitSeparator));
+    private void extractData(File file) throws IOException {
+        AtomicInteger lineNumbers = new AtomicInteger();
+        var reader = getCsvReader(new FileReader(file), getCsvParser(splitSeparator, false), 0);
+        var headers = new ArrayList<String>();
         var loadedLine = new ArrayList<>();
         reader.forEach(line -> {
-            loadedLine.addAll(Arrays.asList(line));
-            log.info(loadedLine.toString());
-            loadedLine.clear();
+            lineNumbers.addAndGet(1);
+            if(lineNumbers.get()==1){
+                headers.addAll(Arrays.asList(line));
+                findAndAddNewLanguage(headers);
+            } else {
+                loadedLine.addAll(Arrays.asList(line));
+
+                loadedLine.clear();
+            }
+
         });
     }
 
-    private CSVParser getCsvParser(char splitSeparator){
-        return new CSVParserBuilder()
-                .withSeparator(splitSeparator)
-                .withIgnoreQuotations(true)
-                .build();
-    }
+    private void findAndAddNewLanguage(Collection<String> newData){
+        var existingLanguages = languageService.getLanguages().stream()
+                .map(LanguageDto::getCode)
+                .collect(Collectors.toList());
 
-    private CSVReader getCsvReader(FileReader reader, CSVParser parser){
-        return new CSVReaderBuilder(reader)
-                .withSkipLines(0)
-                .withCSVParser(parser)
-                .build();
+        newData.stream()
+                .filter(e -> !ignoredWords.contains(e) && !existingLanguages.contains(e))
+                .forEach(e -> {
+                    var newLanguage = new LanguageDto(e);
+                    newLanguage = languageService.saveLanguage(newLanguage);
+                    log.info(String.format(savedNewLanguageMassage, newLanguage.toStringForNewRecord()));
+                });
     }
-
 }
