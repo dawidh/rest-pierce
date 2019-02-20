@@ -17,6 +17,18 @@ public class OptionEntity extends BaseData{
     @Column(name = "sort_order")
     private Integer sortOrder;
 
+    public OptionEntity() {
+    }
+
+    public OptionEntity(Long id) {
+        this.id = id;
+    }
+
+    public OptionEntity(@NotNull String code) {
+        this.code = code;
+    }
+
+
     public String getCode() {
         return code;
     }

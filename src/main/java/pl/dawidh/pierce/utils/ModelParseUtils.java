@@ -3,9 +3,11 @@ package pl.dawidh.pierce.utils;
 import pl.dawidh.pierce.controller.dto.AttributeDto;
 import pl.dawidh.pierce.controller.dto.AttributeTranslationDto;
 import pl.dawidh.pierce.controller.dto.LanguageDto;
+import pl.dawidh.pierce.controller.dto.OptionDto;
 import pl.dawidh.pierce.entity.AttributeEntity;
 import pl.dawidh.pierce.entity.AttributeTranslationEntity;
 import pl.dawidh.pierce.entity.LanguageEntity;
+import pl.dawidh.pierce.entity.OptionEntity;
 
 import java.util.Collection;
 import java.util.List;
@@ -114,6 +116,26 @@ public class ModelParseUtils {
     public static List<AttributeTranslationDto> attributeTranslationCollectionEntityToListDto(Collection<AttributeTranslationEntity> entities){
         return entities.stream()
                 .map(ModelParseUtils::attributeTranslationEntityToDto)
+                .collect(Collectors.toList());
+    }
+
+    public static OptionEntity optionDtoToEntity(OptionDto dto){
+        return new OptionEntity(dto.getCode());
+    }
+
+    public static List<OptionEntity> optionCollectionDtoToListEntity(Collection<OptionDto> dtos){
+        return dtos.stream()
+                .map(ModelParseUtils::optionDtoToEntity)
+                .collect(Collectors.toList());
+    }
+
+    public static OptionDto optionEntityToDto(OptionEntity entity){
+        return new OptionDto(entity.getCode());
+    }
+
+    public static List<OptionDto> optionCollectionEntityToListDto(Collection<OptionEntity> entities){
+        return entities.stream()
+                .map(ModelParseUtils::optionEntityToDto)
                 .collect(Collectors.toList());
     }
 }

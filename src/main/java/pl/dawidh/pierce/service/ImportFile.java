@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import pl.dawidh.pierce.controller.dto.AttributeDto;
 import pl.dawidh.pierce.controller.dto.AttributeTranslationDto;
 import pl.dawidh.pierce.controller.dto.LanguageDto;
+import pl.dawidh.pierce.controller.dto.OptionDto;
 import pl.dawidh.pierce.enums.DataFileTypeEnum;
 import pl.dawidh.pierce.exception.NotFoundException;
 
@@ -25,6 +26,7 @@ public class ImportFile {
     private final String savedNewLanguageMassage = "New language saved %s";
     private final String savedNewAttributeMassage = "New attribute saved %s";
     private final String savedNewAttributeTranslationMassage = "New attribute translation saved %s";
+    private final String savedNewOptionMassage = "New option saved %s";
     private final List<String> ignoredWords = Arrays.asList("attribute", "sort_order", "code");
     private final AttributeService attributeService;
     private final AttributeTranslationService attributeTranslationService;
@@ -117,13 +119,13 @@ public class ImportFile {
         if(dataType == DataFileTypeEnum.ATTRIBUTES){
             processAttributesFile(data, languages, headers);
         } else if (dataType == DataFileTypeEnum.OPTIONS){
-            processOptionsFile();
+            processOptionsFile(data, languages, headers);
         } else {
             throw new IllegalArgumentException(dataType.toString());
         }
     }
 
-    private void processOptionsFile(){
+    private void processOptionsFile(List<String> data, List<LanguageDto> languages, List<String> headers){
 
     }
 
