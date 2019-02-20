@@ -4,6 +4,10 @@ import org.springframework.stereotype.Service;
 import pl.dawidh.pierce.controller.dto.AttributeDto;
 import pl.dawidh.pierce.repository.AttributeRepository;
 
+import java.util.List;
+
+import static pl.dawidh.pierce.utils.ModelParseUtils.*;
+
 @Service
 public class AttributeService {
     private final AttributeRepository attributeRepository;
@@ -12,8 +16,14 @@ public class AttributeService {
         this.attributeRepository = attributeRepository;
     }
 
+    public List<AttributeDto> getAttributes(){
+        return attributeCollectionEntityToListDto(attributeRepository.findAll());
+    }
+
     public AttributeDto saveAttribute(AttributeDto attributeDto){
-        return null;
+        var newAttribute = attributeDtoToEntity(attributeDto);
+        var savedAttribute = attributeRepository.save(newAttribute);
+        return attributeEntityToDto(savedAttribute);
     }
 
     public AttributeDto putAttribute(AttributeDto attributeDto){

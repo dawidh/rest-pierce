@@ -17,7 +17,7 @@ public class LanguageService {
     }
 
     public List<LanguageDto> getLanguages(){
-        return languageListEntityToDto(languageRepository.findAll());
+        return languageCollectionEntityToListDto(languageRepository.findAll());
     }
 
     public LanguageDto saveLanguage(LanguageDto languageDto){

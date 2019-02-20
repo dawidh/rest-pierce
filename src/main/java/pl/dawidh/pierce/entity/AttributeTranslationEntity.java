@@ -22,6 +22,16 @@ public class AttributeTranslationEntity extends BaseData {
     @NotNull
     private String translate;
 
+    public AttributeTranslationEntity(@NotNull String translate) {
+        this.translate = translate;
+    }
+
+    public AttributeTranslationEntity(@NotNull LanguageEntity language, @NotNull AttributeEntity attribute, @NotNull String translate) {
+        this.language = language;
+        this.attribute = attribute;
+        this.translate = translate;
+    }
+
     public LanguageEntity getLanguage() {
         return language;
     }

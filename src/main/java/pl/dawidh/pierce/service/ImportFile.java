@@ -4,7 +4,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import pl.dawidh.pierce.controller.dto.AttributeDto;
 import pl.dawidh.pierce.controller.dto.LanguageDto;
+import pl.dawidh.pierce.enums.DataFileTypeEnum;
 
 import java.io.*;
 import java.util.*;
@@ -19,6 +21,7 @@ public class ImportFile {
     private static final Logger log = LoggerFactory.getLogger(ImportFile.class);
     private final String noFileMassage = "No file '%s'";
     private final String savedNewLanguageMassage = "New language saved %s";
+    private final String savedNewAttributeMassage = "New attribute saved %s";
     private final List<String> ignoredWords = Arrays.asList("attribute", "sort_order", "code");
     private final AttributeService attributeService;
     private final AttributeTranslationService attributeTranslationService;
@@ -73,7 +76,7 @@ public class ImportFile {
         AtomicInteger lineNumbers = new AtomicInteger();
         var reader = getCsvReader(new FileReader(file), getCsvParser(splitSeparator, false), 0);
         var headers = new ArrayList<String>();
-        var loadedLine = new ArrayList<>();
+        var loadedLine = new ArrayList<String>();
         reader.forEach(line -> {
             lineNumbers.addAndGet(1);
             if(lineNumbers.get()==1){
@@ -81,7 +84,7 @@ public class ImportFile {
                 findAndAddNewLanguage(headers);
             } else {
                 loadedLine.addAll(Arrays.asList(line));
-
+                addNewDataByFile(file.getName(), loadedLine);
                 loadedLine.clear();
             }
 
@@ -98,7 +101,26 @@ public class ImportFile {
                 .forEach(e -> {
                     var newLanguage = new LanguageDto(e);
                     newLanguage = languageService.saveLanguage(newLanguage);
-                    log.info(String.format(savedNewLanguageMassage, newLanguage.toStringForNewRecord()));
+                    log.info(String.format(savedNewLanguageMassage, newLanguage.newRecordToString()));
                 });
+    }
+
+    private void addNewDataByFile(String filename, Collection<String> data){
+        var dataType = DataFileTypeEnum.getDataTypeField(filename);
+        if(dataType == DataFileTypeEnum.ATTRIBUTES){
+            findAndAddNewAttributes(List.copyOf(data).get(0));
+        }
+    }
+
+    private void findAndAddNewAttributes(String newData){
+        var existingAttributes = attributeService.getAttributes().stream()
+                .map(AttributeDto::getCode)
+                .collect(Collectors.toList());
+
+        if(!existingAttributes.contains(newData)){
+            var newAttribute = new AttributeDto(newData);
+            newAttribute = attributeService.saveAttribute(newAttribute);
+            log.info(String.format(savedNewAttributeMassage, newAttribute.newRecordToString()));
+        }
     }
 }

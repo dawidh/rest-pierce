@@ -14,14 +14,21 @@ public class LanguageDto extends BaseData {
         this.code = code;
     }
 
-    public LanguageDto(Long id, LocalDateTime created, LocalDateTime modified, @NotNull String code) {
+    public LanguageDto(Long id,
+                       LocalDateTime created,
+                       LocalDateTime modified,
+                       @NotNull String code) {
         this.id = id;
         this.created = created;
         this.modified = modified;
         this.code = code;
     }
 
-    public LanguageDto(Long id, LocalDateTime created, LocalDateTime modified, @NotNull String code, Collection<AttributeTranslationDto> attributeTranslations) {
+    public LanguageDto(Long id,
+                       LocalDateTime created,
+                       LocalDateTime modified,
+                       @NotNull String code,
+                       Collection<AttributeTranslationDto> attributeTranslations) {
         this.id = id;
         this.created = created;
         this.modified = modified;
@@ -45,7 +52,7 @@ public class LanguageDto extends BaseData {
         this.attributeTranslations = attributeTranslations;
     }
 
-    public String toStringForNewRecord() {
+    public String newRecordToString() {
         return String.format("'%s', id = {%d}", code, id);
     }
 }

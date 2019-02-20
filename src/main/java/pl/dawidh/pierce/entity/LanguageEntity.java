@@ -1,6 +1,7 @@
 package pl.dawidh.pierce.entity;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -12,8 +13,11 @@ public class LanguageEntity extends BaseData {
     @NotNull
     private String code;
 
-    @OneToMany(mappedBy = "language")
+    @OneToMany(mappedBy = "language", fetch = FetchType.EAGER)
     private Collection<AttributeTranslationEntity> attributeTranslations;
+
+    public LanguageEntity() {
+    }
 
     public LanguageEntity(@NotNull String code) {
         this.code = code;
