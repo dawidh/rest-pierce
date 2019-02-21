@@ -6,7 +6,7 @@ import pl.dawidh.pierce.repository.OptionRepository;
 
 import java.util.List;
 
-import static pl.dawidh.pierce.utils.ModelParseUtils.optionCollectionEntityToListDto;
+import static pl.dawidh.pierce.utils.ModelParseUtils.*;
 
 @Service
 public class OptionService {
@@ -21,7 +21,9 @@ public class OptionService {
     }
 
     public OptionDto saveOption(OptionDto optionDto){
-        return null;
+        var newOption = optionDtoToEntity(optionDto);
+        var savedOption = optionRepository.save(newOption);
+        return optionEntityToDto(savedOption);
     }
 
     public OptionDto putOption(OptionDto optionDto){

@@ -120,7 +120,9 @@ public class ModelParseUtils {
     }
 
     public static OptionEntity optionDtoToEntity(OptionDto dto){
-        return new OptionEntity(dto.getCode());
+        return new OptionEntity(dto.getCode(),
+                new AttributeEntity(dto.getAttributeId()),
+                dto.getSortOrder());
     }
 
     public static List<OptionEntity> optionCollectionDtoToListEntity(Collection<OptionDto> dtos){
@@ -130,7 +132,12 @@ public class ModelParseUtils {
     }
 
     public static OptionDto optionEntityToDto(OptionEntity entity){
-        return new OptionDto(entity.getCode());
+        return new OptionDto(entity.getId(),
+                sqlTimestampToLocalDateTime(entity.getCreated()),
+                sqlTimestampToLocalDateTime(entity.getModified()),
+                entity.getCode(),
+                entity.getAttribute().getId(),
+                entity.getSortOrder());
     }
 
     public static List<OptionDto> optionCollectionEntityToListDto(Collection<OptionEntity> entities){

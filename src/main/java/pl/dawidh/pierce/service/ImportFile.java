@@ -27,7 +27,10 @@ public class ImportFile {
     private final String savedNewAttributeMassage = "New attribute saved %s";
     private final String savedNewAttributeTranslationMassage = "New attribute translation saved %s";
     private final String savedNewOptionMassage = "New option saved %s";
-    private final List<String> ignoredWords = Arrays.asList("attribute", "sort_order", "code");
+    private final String attributeCode = "attribute";
+    private final String codeCode = "code";
+    private final String sortOrderCode = "sort_order";
+    private final List<String> ignoredWords = Arrays.asList(attributeCode, sortOrderCode, codeCode);
     private final AttributeService attributeService;
     private final AttributeTranslationService attributeTranslationService;
     private final LanguageService languageService;
@@ -126,11 +129,25 @@ public class ImportFile {
     }
 
     private void processOptionsFile(List<String> data, List<LanguageDto> languages, List<String> headers){
-
+        var attributeIndex = headers.indexOf(this.attributeCode);
+        var optionIndex = headers.indexOf(this.codeCode);
+        var sortOrderIndex = headers.indexOf(this.sortOrderCode);
+        var attributeCode = data.get(attributeIndex);
+        var optionCode = data.get(optionIndex);
+        var sortOrder = Integer.parseInt(data.get(sortOrderIndex));
+        var existingAttributes = findAndAddNewAttributes(attributeCode);
+        var currentAttribute = existingAttributes.stream()
+                .filter(attribute -> attribute.getCode().equals(attributeCode))
+                .findFirst()
+                .orElseThrow(() -> {
+                    throw new NotFoundException();
+                });
+        var existingOptions = findAndAddNewOptions(new OptionDto(optionCode, currentAttribute.getId(), sortOrder));
     }
 
     private void processAttributesFile(List<String> data, List<LanguageDto> languages, List<String> headers){
-        var existingAttributes = findAndAddNewAttributes(data.get(0));
+        var attributeIndex = headers.indexOf(this.codeCode);
+        var existingAttributes = findAndAddNewAttributes(data.get(attributeIndex));
         var i = new AtomicInteger();
         data.forEach(e -> {
             if(i.get() != 0){
@@ -140,7 +157,7 @@ public class ImportFile {
                             throw new NotFoundException();
                         });
                 var attributeDto = existingAttributes.stream()
-                        .filter(attribute -> attribute.getCode().equals(data.get(0)))
+                        .filter(attribute -> attribute.getCode().equals(data.get(attributeIndex)))
                         .findFirst().orElseThrow(() -> {
                             throw new NotFoundException();
                         });
@@ -169,5 +186,19 @@ public class ImportFile {
         var newAttributeTranslation = new AttributeTranslationDto(language.getId(), attribute.getId(), translation);
         newAttributeTranslation = attributeTranslationService.saveAttributeTranslation(newAttributeTranslation);
         log.info(String.format(savedNewAttributeTranslationMassage, newAttributeTranslation.newRecordToString()));
+    }
+
+    private List<OptionDto> findAndAddNewOptions(OptionDto option){
+        var existingOptions = optionService.getOptions();
+        var optionExist = existingOptions.stream()
+                .anyMatch(existingOption -> option.getCode().equals(existingOption.getCode()) &&
+                        option.getAttributeId().equals(existingOption.getAttributeId()));
+
+        if(!optionExist){
+            var newOption = optionService.saveOption(option);
+            existingOptions.add(newOption);
+            log.info(String.format(savedNewOptionMassage, newOption.newRecordToString()));
+        }
+        return existingOptions;
     }
 }

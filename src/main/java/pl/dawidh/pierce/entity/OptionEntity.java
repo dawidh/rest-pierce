@@ -28,6 +28,14 @@ public class OptionEntity extends BaseData{
         this.code = code;
     }
 
+    public OptionEntity(@NotNull String code,
+                        AttributeEntity attribute,
+                        @NotNull Integer sortOrder) {
+        this.code = code;
+        this.attribute = attribute;
+        this.sortOrder = sortOrder;
+    }
+
 
     public String getCode() {
         return code;

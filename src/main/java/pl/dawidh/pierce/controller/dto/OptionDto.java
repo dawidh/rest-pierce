@@ -17,14 +17,26 @@ public class OptionDto extends BaseData {
         this.code = code;
     }
 
+    public OptionDto(@NotNull String code,
+                     @NotNull Long attributeId,
+                     @NotNull Integer sortOrder) {
+        this.code = code;
+        this.attributeId = attributeId;
+        this.sortOrder = sortOrder;
+    }
+
     public OptionDto(Long id,
                         LocalDateTime created,
                         LocalDateTime modified,
-                        @NotNull String code) {
+                        @NotNull String code,
+                        @NotNull Long attributeId,
+                        @NotNull Integer sortOrder) {
         this.id = id;
         this.created = created;
         this.modified = modified;
         this.code = code;
+        this.attributeId = attributeId;
+        this.sortOrder = sortOrder;
     }
 
     public String getCode() {
@@ -35,11 +47,11 @@ public class OptionDto extends BaseData {
         this.code = code;
     }
 
-    public Long getAttribute() {
+    public Long getAttributeId() {
         return attributeId;
     }
 
-    public void setAttribute(Long attributeId) {
+    public void setAttributeId(Long attributeId) {
         this.attributeId = attributeId;
     }
 
