@@ -1,13 +1,18 @@
 package pl.dawidh.pierce.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+@JsonIgnoreProperties(value={ "AttributeTranslationDto"}, allowSetters= true)
 public class LanguageDto extends BaseData {
     @NotNull
     private String code;
 
+    @JsonProperty("AttributeTranslationDto")
     private Collection<AttributeTranslationDto> attributeTranslations;
 
     public LanguageDto(@NotNull String code) {
