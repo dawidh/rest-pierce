@@ -53,6 +53,6 @@ public class AttributeDto extends BaseData {
     }
 
     public String newRecordToString() {
-        return String.format("'%s', id = {%d}", code, id);
+        return String.format("'%s', id = '%d'", code, id);
     }
 }

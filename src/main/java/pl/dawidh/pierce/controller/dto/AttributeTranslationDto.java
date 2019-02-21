@@ -60,6 +60,6 @@ public class AttributeTranslationDto extends BaseData {
     }
 
     public String newRecordToString() {
-        return String.format("'%s', id = {%d}", translate, id);
+        return String.format("'%s', id = '%d'", translate, id);
     }
 }

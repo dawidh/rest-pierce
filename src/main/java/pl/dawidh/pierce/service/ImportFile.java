@@ -20,11 +20,11 @@ import static pl.dawidh.pierce.utils.CsvUtils.getCsvReader;
 public class ImportFile {
     private static final Logger log = LoggerFactory.getLogger(ImportFile.class);
     private final String noFileMassage = "No file '%s'";
-    private final String savedNewLanguageMassage = "New language saved %s";
-    private final String savedNewAttributeMassage = "New attribute saved %s";
-    private final String savedNewAttributeTranslationMassage = "New attribute translation saved %s";
-    private final String savedNewOptionTranslationMassage = "New option translation saved %s";
-    private final String savedNewOptionMassage = "New option saved %s";
+    private final String savedNewLanguageMassage = "A new language has been saved %s";
+    private final String savedNewAttributeMassage = "A new attribute has been saved %s";
+    private final String savedNewAttributeTranslationMassage = "A new translation has been saved for the '%s' attribute: %s";
+    private final String savedNewOptionTranslationMassage = "A new translation has been saved for the '%s' option: %s";
+    private final String savedNewOptionMassage = "A new option has been saved %s";
     private final String attributeCode = "attribute";
     private final String codeCode = "code";
     private final String sortOrderCode = "sort_order";
@@ -208,7 +208,7 @@ public class ImportFile {
     private void findAndAddAttributeTranslations(LanguageDto language, AttributeDto attribute, String translation){
         var newAttributeTranslation = new AttributeTranslationDto(language.getId(), attribute.getId(), translation);
         newAttributeTranslation = attributeTranslationService.saveAttributeTranslation(newAttributeTranslation);
-        log.info(String.format(savedNewAttributeTranslationMassage, newAttributeTranslation.newRecordToString()));
+        log.info(String.format(savedNewAttributeTranslationMassage, attribute.getCode(), newAttributeTranslation.newRecordToString()));
     }
 
     private List<OptionDto> findAndAddNewOptions(OptionDto option){
@@ -228,6 +228,6 @@ public class ImportFile {
     private void findAndAddOptionTranslations(LanguageDto language, OptionDto option, String translation){
         var newOptionTranslation = new OptionTranslationDto(language.getId(), option.getId(), translation);
         newOptionTranslation = optionTranslationService.saveOptionTranslation(newOptionTranslation);
-        log.info(String.format(savedNewOptionTranslationMassage, newOptionTranslation.newRecordToString()));
+        log.info(String.format(savedNewOptionTranslationMassage, option.getCode(), newOptionTranslation.newRecordToString()));
     }
 }
