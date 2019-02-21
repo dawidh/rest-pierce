@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 import pl.dawidh.pierce.controller.dto.OptionTranslationDto;
 import pl.dawidh.pierce.repository.OptionTranslationRepository;
 
+import static pl.dawidh.pierce.utils.ModelParseUtils.optionTranslationDtoToEntity;
+import static pl.dawidh.pierce.utils.ModelParseUtils.optionTranslationEntityToDto;
+
 @Service
 public class OptionTranslationService {
     private final OptionTranslationRepository optionTranslationRepository;
@@ -13,7 +16,9 @@ public class OptionTranslationService {
     }
 
     public OptionTranslationDto saveOptionTranslation(OptionTranslationDto optionTranslationDto){
-        return null;
+        var newOptionTranslation = optionTranslationDtoToEntity(optionTranslationDto);
+        var savedOptionTranslation = optionTranslationRepository.save(newOptionTranslation);
+        return optionTranslationEntityToDto(savedOptionTranslation);
     }
 
     public OptionTranslationDto putOptionTranslation(OptionTranslationDto optionTranslationDto){

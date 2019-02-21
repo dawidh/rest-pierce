@@ -1,13 +1,7 @@
 package pl.dawidh.pierce.utils;
 
-import pl.dawidh.pierce.controller.dto.AttributeDto;
-import pl.dawidh.pierce.controller.dto.AttributeTranslationDto;
-import pl.dawidh.pierce.controller.dto.LanguageDto;
-import pl.dawidh.pierce.controller.dto.OptionDto;
-import pl.dawidh.pierce.entity.AttributeEntity;
-import pl.dawidh.pierce.entity.AttributeTranslationEntity;
-import pl.dawidh.pierce.entity.LanguageEntity;
-import pl.dawidh.pierce.entity.OptionEntity;
+import pl.dawidh.pierce.controller.dto.*;
+import pl.dawidh.pierce.entity.*;
 
 import java.util.Collection;
 import java.util.List;
@@ -144,5 +138,20 @@ public class ModelParseUtils {
         return entities.stream()
                 .map(ModelParseUtils::optionEntityToDto)
                 .collect(Collectors.toList());
+    }
+
+    public static OptionTranslationEntity optionTranslationDtoToEntity(OptionTranslationDto dto){
+        return new OptionTranslationEntity(new LanguageEntity(dto.getLanguage()),
+                new OptionEntity(dto.getOption()),
+                dto.getTranslate());
+    }
+
+    public static OptionTranslationDto optionTranslationEntityToDto(OptionTranslationEntity entity){
+        return new OptionTranslationDto(entity.getId(),
+                sqlTimestampToLocalDateTime(entity.getCreated()),
+                sqlTimestampToLocalDateTime(entity.getModified()),
+                entity.getLanguage().getId(),
+                entity.getOption().getId(),
+                entity.getTranslate());
     }
 }

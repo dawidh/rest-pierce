@@ -4,10 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import pl.dawidh.pierce.controller.dto.AttributeDto;
-import pl.dawidh.pierce.controller.dto.AttributeTranslationDto;
-import pl.dawidh.pierce.controller.dto.LanguageDto;
-import pl.dawidh.pierce.controller.dto.OptionDto;
+import pl.dawidh.pierce.controller.dto.*;
 import pl.dawidh.pierce.enums.DataFileTypeEnum;
 import pl.dawidh.pierce.exception.NotFoundException;
 
@@ -26,6 +23,7 @@ public class ImportFile {
     private final String savedNewLanguageMassage = "New language saved %s";
     private final String savedNewAttributeMassage = "New attribute saved %s";
     private final String savedNewAttributeTranslationMassage = "New attribute translation saved %s";
+    private final String savedNewOptionTranslationMassage = "New option translation saved %s";
     private final String savedNewOptionMassage = "New option saved %s";
     private final String attributeCode = "attribute";
     private final String codeCode = "code";
@@ -143,6 +141,15 @@ public class ImportFile {
                     throw new NotFoundException();
                 });
         var existingOptions = findAndAddNewOptions(new OptionDto(optionCode, currentAttribute.getId(), sortOrder));
+        var i = new AtomicInteger();
+        data.forEach(e -> {
+            if(i.get() != 0 && i.get() < (data.size() - 2)){
+                var languageDto = findLanguage(languages, headers.get(i.get()));
+                var optionDto = findOption(existingOptions, optionCode, currentAttribute.getId()) ;
+                findAndAddOptionTranslations(languageDto, optionDto, e);
+            }
+            i.addAndGet(1);
+        });
     }
 
     private void processAttributesFile(List<String> data, List<LanguageDto> languages, List<String> headers){
@@ -150,21 +157,37 @@ public class ImportFile {
         var existingAttributes = findAndAddNewAttributes(data.get(attributeIndex));
         var i = new AtomicInteger();
         data.forEach(e -> {
-            if(i.get() != 0){
-                var languageDto = languages.stream()
-                        .filter(language -> language.getCode().equals(headers.get(i.get())))
-                        .findFirst().orElseThrow(() -> {
-                            throw new NotFoundException();
-                        });
-                var attributeDto = existingAttributes.stream()
-                        .filter(attribute -> attribute.getCode().equals(data.get(attributeIndex)))
-                        .findFirst().orElseThrow(() -> {
-                            throw new NotFoundException();
-                        });
+            if(i.get() != 0) {
+                var languageDto = findLanguage(languages, headers.get(i.get()));
+                var attributeDto = findAttribute(existingAttributes, data.get(attributeIndex));
                 findAndAddAttributeTranslations(languageDto, attributeDto, e);
             }
             i.addAndGet(1);
         });
+    }
+
+    private OptionDto findOption(List<OptionDto> options, String optionCode, Long attributeId){
+        return options.stream()
+                .filter(option -> option.getCode().equals(optionCode) && option.getAttributeId().equals(attributeId))
+                .findFirst().orElseThrow(() -> {
+                    throw new NotFoundException();
+                });
+    }
+
+    private LanguageDto findLanguage(List<LanguageDto> languages, String languageCode){
+        return languages.stream()
+                .filter(language -> language.getCode().equals(languageCode))
+                .findFirst().orElseThrow(() -> {
+                    throw new NotFoundException();
+                });
+    }
+
+    private AttributeDto findAttribute(List<AttributeDto> attributes, String attributeCode){
+        return attributes.stream()
+                .filter(attribute -> attribute.getCode().equals(attributeCode))
+                .findFirst().orElseThrow(() -> {
+                    throw new NotFoundException();
+                });
     }
 
     private List<AttributeDto> findAndAddNewAttributes(String newData){
@@ -200,5 +223,11 @@ public class ImportFile {
             log.info(String.format(savedNewOptionMassage, newOption.newRecordToString()));
         }
         return existingOptions;
+    }
+
+    private void findAndAddOptionTranslations(LanguageDto language, OptionDto option, String translation){
+        var newOptionTranslation = new OptionTranslationDto(language.getId(), option.getId(), translation);
+        newOptionTranslation = optionTranslationService.saveOptionTranslation(newOptionTranslation);
+        log.info(String.format(savedNewOptionTranslationMassage, newOptionTranslation.newRecordToString()));
     }
 }
