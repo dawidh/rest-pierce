@@ -47,7 +47,6 @@ public class AttributeService {
     public AttributeDto putAttribute(AttributeDto newData, Long id){
         var attribute = attributeRepository.findById(id)
                 .map(attributeEntity -> {
-                    attributeEntity.setCreated(localDateTimeToTimestamp(newData.getCreated()));
                     attributeEntity.setCode(isDuplicate(newData.getCode()));
                     return attributeRepository.save(attributeEntity);
                 })

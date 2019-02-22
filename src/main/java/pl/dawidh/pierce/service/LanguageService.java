@@ -9,7 +9,6 @@ import pl.dawidh.pierce.repository.LanguageRepository;
 import java.util.Collections;
 import java.util.List;
 
-import static pl.dawidh.pierce.utils.DateUtils.localDateTimeToTimestamp;
 import static pl.dawidh.pierce.utils.ModelParseUtils.*;
 
 @Service
@@ -48,7 +47,6 @@ public class LanguageService {
         var language = languageRepository.findById(id)
                 .map(languageEntity -> {
                     languageEntity.setCode(isDuplicate(newData.getCode()));
-                    languageEntity.setCreated(localDateTimeToTimestamp(newData.getCreated()));
                     return languageRepository.save(languageEntity);
                 })
                 .orElseGet(() -> languageRepository.save(languageDtoToEntity(newData)));

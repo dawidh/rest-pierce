@@ -2,6 +2,7 @@ package pl.dawidh.pierce.controller;
 
 import org.springframework.web.bind.annotation.*;
 import pl.dawidh.pierce.controller.dto.AttributeDto;
+import pl.dawidh.pierce.controller.dto.AttributeTranslationDto;
 import pl.dawidh.pierce.service.AttributeService;
 import pl.dawidh.pierce.service.AttributeTranslationService;
 
@@ -29,7 +30,7 @@ public class AttributeController {
     }
 
     @PostMapping
-    private AttributeDto addAttributes(@Valid @RequestBody AttributeDto newAttribute) {
+    private AttributeDto addAttribute(@Valid @RequestBody AttributeDto newAttribute) {
         return attributeService.saveAttribute(newAttribute);
     }
 
@@ -42,5 +43,29 @@ public class AttributeController {
     @DeleteMapping("/{id}")
     private AttributeDto deleteAttribute(@PathVariable Long id) {
         return attributeService.deleteAttribute(id);
+    }
+
+    @GetMapping(path = {"/translations", "/translations/{id}"})
+    private @ResponseBody
+    List<AttributeTranslationDto> getTranslations(@PathVariable(required = false) Long id,
+                                                  @RequestParam(required = false) String translation,
+                                                  @RequestParam(required = false) String attributeCode){
+        return attributeTranslationService.getAttributeTranslations(id, translation, attributeCode);
+    }
+
+    @PostMapping("/translations")
+    private AttributeTranslationDto addTranslation(@Valid @RequestBody AttributeTranslationDto newAttribute) {
+        return attributeTranslationService.saveAttributeTranslation(newAttribute);
+    }
+
+    @PutMapping(path = {"/translations", "/translations/{id}"})
+    private AttributeTranslationDto putTranslation(@Valid @RequestBody AttributeTranslationDto newData,
+                                      @PathVariable(required = false) Long id) {
+        return attributeTranslationService.putAttributeTranslation(newData, id);
+    }
+
+    @DeleteMapping("/translations/{id}")
+    private AttributeTranslationDto deleteTranslation(@PathVariable Long id) {
+        return attributeTranslationService.deleteAttributeTranslation(id);
     }
 }
