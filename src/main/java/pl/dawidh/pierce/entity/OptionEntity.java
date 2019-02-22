@@ -1,7 +1,11 @@
 package pl.dawidh.pierce.entity;
 
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+import java.util.Collection;
 
 @Entity
 @Table(name = "options")
@@ -16,6 +20,10 @@ public class OptionEntity extends BaseData{
     @NotNull
     @Column(name = "sort_order")
     private Integer sortOrder;
+
+    @OneToMany(mappedBy = "option")
+    @LazyCollection(LazyCollectionOption.FALSE)
+    private Collection<OptionTranslationEntity> optionTranslations;
 
     public OptionEntity() {
     }
@@ -59,5 +67,13 @@ public class OptionEntity extends BaseData{
 
     public void setSortOrder(Integer sortOrder) {
         this.sortOrder = sortOrder;
+    }
+
+    public Collection<OptionTranslationEntity> getAttributeTranslations() {
+        return optionTranslations;
+    }
+
+    public void setAttributeTranslations(Collection<OptionTranslationEntity> optionTranslations) {
+        this.optionTranslations = optionTranslations;
     }
 }

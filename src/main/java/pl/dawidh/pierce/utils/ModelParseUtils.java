@@ -11,13 +11,7 @@ import static pl.dawidh.pierce.utils.DateUtils.sqlTimestampToLocalDateTime;
 
 public class ModelParseUtils {
     public static LanguageEntity languageDtoToEntity(LanguageDto dto){
-        if(dto.getAttributeTranslations() == null || dto.getAttributeTranslations().isEmpty()){
-            return new LanguageEntity(dto.getCode());
-        } else {
-            var attributes = attributeTranslationCollectionDtoToListEntity(dto.getAttributeTranslations());
-            return new LanguageEntity(dto.getCode(),
-                    attributes);
-        }
+        return new LanguageEntity(dto.getCode());
     }
 
     public static List<LanguageEntity> languageCollectionDtoToListEntity(Collection<LanguageDto> dtos){
@@ -27,19 +21,10 @@ public class ModelParseUtils {
     }
 
     public static LanguageDto languageEntityToDto(LanguageEntity entity){
-        if(entity.getAttributeTranslations() == null || entity.getAttributeTranslations().isEmpty()){
-            return new LanguageDto(entity.getId(),
-                    sqlTimestampToLocalDateTime(entity.getCreated()),
-                    sqlTimestampToLocalDateTime(entity.getModified()),
-                    entity.getCode());
-        } else {
-            var attributes = attributeTranslationCollectionEntityToListDto(entity.getAttributeTranslations());
-            return new LanguageDto(entity.getId(),
-                    sqlTimestampToLocalDateTime(entity.getCreated()),
-                    sqlTimestampToLocalDateTime(entity.getModified()),
-                    entity.getCode(),
-                    attributes);
-        }
+        return new LanguageDto(entity.getId(),
+                sqlTimestampToLocalDateTime(entity.getCreated()),
+                sqlTimestampToLocalDateTime(entity.getModified()),
+                entity.getCode());
     }
 
     public static List<LanguageDto> languageCollectionEntityToListDto(Collection<LanguageEntity> entities){
