@@ -31,13 +31,13 @@ public class LanguageController {
     }
 
     @PutMapping(path = {"", "/{id}"})
-    private LanguageDto putReservation(@Valid @RequestBody LanguageDto newData,
-                                        @PathVariable(required = false) Long id) {
+    private LanguageDto putLanguage(@Valid @RequestBody LanguageDto newData,
+                                    @PathVariable(required = false) Long id) {
         return languageService.putLanguage(newData, id);
     }
 
     @DeleteMapping("/{id}")
-    private LanguageDto deleteReservation(@PathVariable Long id) {
+    private LanguageDto deleteLanguage(@PathVariable Long id) {
         return languageService.deleteLanguage(id);
     }
 }
