@@ -2,8 +2,11 @@ package pl.dawidh.pierce.service;
 
 import org.springframework.stereotype.Service;
 import pl.dawidh.pierce.controller.dto.OptionDto;
+import pl.dawidh.pierce.entity.AttributeEntity;
+import pl.dawidh.pierce.exception.NotFoundException;
 import pl.dawidh.pierce.repository.OptionRepository;
 
+import java.util.Collections;
 import java.util.List;
 
 import static pl.dawidh.pierce.utils.ModelParseUtils.*;
@@ -12,8 +15,22 @@ import static pl.dawidh.pierce.utils.ModelParseUtils.*;
 public class OptionService {
     private final OptionRepository optionRepository;
 
-    public List<OptionDto> getOptions(){
-        return optionCollectionEntityToListDto(optionRepository.findAll());
+    public List<OptionDto> getOptions(Long id, String code, String attributeCode){
+        if(id != null){
+            Collections.singletonList(optionEntityToDto(optionRepository.findById(id).orElseThrow(() -> {
+                var notFoundMassage = "Option with id='%d' not found";
+                throw new NotFoundException(String.format(notFoundMassage, id));
+            })));
+        } else if (code != null && attributeCode != null){
+            return optionCollectionEntityToListDto(optionRepository.findByCodeAndAttribute(code, attributeCode));
+        } else if (code != null){
+            return optionCollectionEntityToListDto(optionRepository.findByCodeEqualsIgnoreCase(code));
+        } else if (attributeCode != null){
+            return optionCollectionEntityToListDto(optionRepository.findByAttributeCode(attributeCode));
+        } else {
+            return optionCollectionEntityToListDto(optionRepository.findAll());
+        }
+        return null;
     }
 
     public OptionService(OptionRepository optionRepository) {
@@ -26,11 +43,24 @@ public class OptionService {
         return optionEntityToDto(savedOption);
     }
 
-    public OptionDto putOption(OptionDto optionDto){
-        return null;
+    public OptionDto putOption(OptionDto newData, Long id){
+        var option = optionRepository.findById(id)
+                .map(optionEntity -> {
+                    optionEntity.setCode(newData.getCode());
+                    optionEntity.setSortOrder(newData.getSortOrder());
+                    optionEntity.setAttribute(new AttributeEntity(newData.getAttributeId()));
+                    return optionRepository.save(optionEntity);
+                })
+                .orElseGet(() -> optionRepository.save(optionDtoToEntity(newData)));
+        return optionEntityToDto(option);
     }
 
-    public OptionDto deleteOption(OptionDto optionDto){
-        return null;
+    public OptionDto deleteOption(Long optionId){
+        var option = optionRepository.findById(optionId).orElseThrow(() -> {
+            var notFoundMassage = "Option with id='%d' not found";
+            throw new NotFoundException(String.format(notFoundMassage, optionId));
+        });
+        optionRepository.delete(option);
+        return optionEntityToDto(option);
     }
 }
