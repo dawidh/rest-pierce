@@ -7,9 +7,9 @@ import java.time.LocalDateTime;
 public abstract class BaseData {
     protected Long id;
     @JsonFormat(pattern="yyyy-MM-dd hh:mm")
-    protected LocalDateTime created;
+    LocalDateTime created;
     @JsonFormat(pattern="yyyy-MM-dd hh:mm")
-    protected LocalDateTime modified;
+    LocalDateTime modified;
 
     public Long getId() {
         return id;

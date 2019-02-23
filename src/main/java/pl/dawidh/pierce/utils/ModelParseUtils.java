@@ -14,11 +14,11 @@ public class ModelParseUtils {
         return new LanguageEntity(dto.getCode());
     }
 
-    public static List<LanguageEntity> languageCollectionDtoToListEntity(Collection<LanguageDto> dtos){
+    /*public static List<LanguageEntity> languageCollectionDtoToListEntity(Collection<LanguageDto> dtos){
         return dtos.stream()
                 .map(ModelParseUtils::languageDtoToEntity)
                 .collect(Collectors.toList());
-    }
+    }*/
 
     public static LanguageDto languageEntityToDto(LanguageEntity entity){
         return new LanguageDto(entity.getId(),
@@ -43,11 +43,11 @@ public class ModelParseUtils {
         }
     }
 
-    public static List<AttributeEntity> attributeCollectionDtoToEntityList(Collection<AttributeDto> dtos){
+    /*public static List<AttributeEntity> attributeCollectionDtoToEntityList(Collection<AttributeDto> dtos){
         return dtos.stream()
                 .map(ModelParseUtils::attributeDtoToEntity)
                 .collect(Collectors.toList());
-    }
+    }*/
 
     public static AttributeDto attributeEntityToDto(AttributeEntity entity){
         if(entity.getAttributeTranslations() == null || entity.getAttributeTranslations().isEmpty()){
@@ -104,11 +104,11 @@ public class ModelParseUtils {
                 dto.getSortOrder());
     }
 
-    public static List<OptionEntity> optionCollectionDtoToListEntity(Collection<OptionDto> dtos){
+    /*public static List<OptionEntity> optionCollectionDtoToListEntity(Collection<OptionDto> dtos){
         return dtos.stream()
                 .map(ModelParseUtils::optionDtoToEntity)
                 .collect(Collectors.toList());
-    }
+    }*/
 
     public static OptionDto optionEntityToDto(OptionEntity entity){
         return new OptionDto(entity.getId(),
@@ -126,8 +126,8 @@ public class ModelParseUtils {
     }
 
     public static OptionTranslationEntity optionTranslationDtoToEntity(OptionTranslationDto dto){
-        return new OptionTranslationEntity(new LanguageEntity(dto.getLanguage()),
-                new OptionEntity(dto.getOption()),
+        return new OptionTranslationEntity(new LanguageEntity(dto.getLanguageId()),
+                new OptionEntity(dto.getOptionId()),
                 dto.getTranslate());
     }
 
@@ -138,5 +138,11 @@ public class ModelParseUtils {
                 entity.getLanguage().getId(),
                 entity.getOption().getId(),
                 entity.getTranslate());
+    }
+
+    public static List<OptionTranslationDto> optionTranslationCollectionEntityToListDto(Collection<OptionTranslationEntity> entities){
+        return entities.stream()
+                .map(ModelParseUtils::optionTranslationEntityToDto)
+                .collect(Collectors.toList());
     }
 }

@@ -4,8 +4,4 @@ public class DuplicateException extends RuntimeException {
     public DuplicateException(String error){
         super(error);
     }
-
-    public DuplicateException(){
-
-    }
 }

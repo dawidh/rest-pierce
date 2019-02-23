@@ -13,12 +13,15 @@ public class OptionTranslationDto extends BaseData {
     @NotNull
     private String translate;
 
+    public OptionTranslationDto() {
+    }
+
     public OptionTranslationDto(Long id,
-                                   LocalDateTime created,
-                                   LocalDateTime modified,
-                                   @NotNull Long languageId,
-                                   @NotNull Long optionId,
-                                   @NotNull String translate) {
+                                LocalDateTime created,
+                                LocalDateTime modified,
+                                @NotNull Long languageId,
+                                @NotNull Long optionId,
+                                @NotNull String translate) {
         this.id = id;
         this.created = created;
         this.modified = modified;
@@ -35,19 +38,19 @@ public class OptionTranslationDto extends BaseData {
         this.translate = translate;
     }
 
-    public Long getLanguage() {
+    public Long getLanguageId() {
         return languageId;
     }
 
-    public void setLanguage(Long languageId) {
+    public void setLanguageId(Long languageId) {
         this.languageId = languageId;
     }
 
-    public Long getOption() {
+    public Long getOptionId() {
         return optionId;
     }
 
-    public void setOption(Long optionId) {
+    public void setOptionId(Long optionId) {
         this.optionId = optionId;
     }
 

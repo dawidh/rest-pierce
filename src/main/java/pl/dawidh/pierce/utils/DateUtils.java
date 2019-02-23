@@ -7,8 +7,4 @@ public class DateUtils {
     public static LocalDateTime sqlTimestampToLocalDateTime(Timestamp timestamp){
         return timestamp.toLocalDateTime();
     }
-
-    public static Timestamp localDateTimeToTimestamp(LocalDateTime localDateTime){
-        return Timestamp.valueOf(localDateTime);
-    }
 }

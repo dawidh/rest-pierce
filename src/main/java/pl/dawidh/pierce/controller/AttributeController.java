@@ -29,7 +29,7 @@ public class AttributeController {
         return attributeService.getAttributes(id, code);
     }
 
-    @PostMapping(path = {"/"})
+    @PostMapping(path = {""})
     private AttributeDto addAttribute(@Valid @RequestBody AttributeDto newAttribute) {
         return attributeService.saveAttribute(newAttribute);
     }

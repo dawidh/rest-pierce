@@ -18,6 +18,14 @@ public interface OptionRepository extends JpaRepository<OptionEntity, Long> {
     List<OptionEntity> findByCodeAndAttribute(@Param("code")String code,
                                               @Param("attributeCode")String attributeCode);
 
+    @Query(value =
+            "SELECT * FROM options o " +
+            "LEFT JOIN attributes a on o.attribute_id=a.id " +
+            "WHERE lower(o.code)=lower(:code) " +
+            "AND lower(a.id)=lower(:attributeId);", nativeQuery = true)
+    List<OptionEntity> findByCodeAndAttributeId(@Param("code")String code,
+                                              @Param("attributeId")Long attributeId);
+
     List<OptionEntity> findByCodeEqualsIgnoreCase(String code);
 
     @Query(value =

@@ -10,6 +10,9 @@ public class LanguageDto extends BaseData {
     @NotNull
     private String code;
 
+    public LanguageDto() {
+    }
+
     public LanguageDto(@NotNull String code) {
         this.code = code;
     }

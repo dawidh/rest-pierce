@@ -44,9 +44,10 @@ public class AttributeService {
     }
 
     public AttributeDto putAttribute(AttributeDto newData, Long id){
+        isDuplicate(newData.getCode());
         var attribute = attributeRepository.findById(id)
                 .map(attributeEntity -> {
-                    attributeEntity.setCode(isDuplicate(newData.getCode()));
+                    attributeEntity.setCode(newData.getCode());
                     return attributeRepository.save(attributeEntity);
                 })
                 .orElseGet(() -> attributeRepository.save(attributeDtoToEntity(newData)));
@@ -62,10 +63,8 @@ public class AttributeService {
         return attributeEntityToDto(attribute);
     }
 
-    private String isDuplicate(String code){
-        if(attributeRepository.findByCodeEqualsIgnoreCase(code).isEmpty()){
-            return code;
-        } else {
+    private void isDuplicate(String code){
+        if(!attributeRepository.findByCodeEqualsIgnoreCase(code).isEmpty()){
             var duplicateErrorMassage = "Attribute '%s' already exists";
             throw new DuplicateException(String.format(duplicateErrorMassage, code));
         }

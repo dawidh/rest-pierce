@@ -25,13 +25,6 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
                 new HttpHeaders(), HttpStatus.NOT_ACCEPTABLE, request);
     }
 
-    @ExceptionHandler(value = {NoParametersException.class})
-    protected ResponseEntity<Object> handleNoParameters(NoParametersException ex, WebRequest request) {
-        var bodyOfResponse = ex.getMessage();
-        return handleExceptionInternal(ex, bodyOfResponse,
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-    }
-
     @ExceptionHandler(value = {DuplicateException.class})
     protected ResponseEntity<Object> handleDuplicate(DuplicateException ex, WebRequest request) {
         var bodyOfResponse = ex.getMessage();

@@ -71,6 +71,14 @@ public class ImportFile {
             extractData(file);
         } catch (Exception e) {
             log.error(e.getMessage());
+        } finally {
+            if(file.delete()){
+                var fileDeleteMassage = "File '%s' deleted";
+                log.info(String.format(fileDeleteMassage, file.getName()));
+            } else {
+                var fileDeleteMassage = "Delete '%s' file operation is failed";
+                log.info(String.format(fileDeleteMassage, file.getName()));
+            }
         }
     }
 

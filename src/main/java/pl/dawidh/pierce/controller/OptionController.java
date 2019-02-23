@@ -30,7 +30,7 @@ public class OptionController {
         return optionService.getOptions(id, code, attributeCode);
     }
 
-    @PostMapping(path = {"/"})
+    @PostMapping(path = {""})
     private OptionDto addOption(@Valid @RequestBody OptionDto newOption) {
         return optionService.saveOption(newOption);
     }
@@ -43,31 +43,32 @@ public class OptionController {
 
     @DeleteMapping("/{id}")
     private OptionDto deleteOption(@PathVariable Long id) {
+        optionTranslationService.deleteOptionTranslationsByOptionId(id);
         return optionService.deleteOption(id);
     }
 
-    /*@GetMapping(path = {"/translations", "/translations/{id}"})
+    @GetMapping(path = {"/translations", "/translations/{id}"})
     private @ResponseBody
     List<OptionTranslationDto> getTranslations(@PathVariable(required = false) Long id,
-                                                  @RequestParam(required = false) String translation,
-                                                  @RequestParam(required = false) String attributeCode){
-        return optionTranslationService.getAttributeTranslations(id, translation, attributeCode);
+                                               @RequestParam(required = false) String translation,
+                                               @RequestParam(required = false) String attributeCode){
+        return optionTranslationService.getOptionTranslations(id, translation, attributeCode);
     }
 
     @PostMapping("/translations")
     private OptionTranslationDto addTranslation(@Valid @RequestBody OptionTranslationDto newAttribute) {
-        return optionTranslationService.saveAttributeTranslation(newAttribute);
+        return optionTranslationService.saveOptionTranslation(newAttribute);
     }
 
     @PutMapping(path = {"/translations", "/translations/{id}"})
     private OptionTranslationDto putTranslation(@Valid @RequestBody OptionTranslationDto newData,
                                                    @PathVariable(required = false) Long id) {
-        return optionTranslationService.putAttributeTranslation(newData, id);
+        return optionTranslationService.putOptionTranslation(newData, id);
     }
 
     @DeleteMapping("/translations/{id}")
     private OptionTranslationDto deleteTranslation(@PathVariable Long id) {
-        return optionTranslationService.deleteAttributeTranslation(id);
-    }*/
+        return optionTranslationService.deleteOptionTranslation(id);
+    }
 
 }

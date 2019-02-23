@@ -44,9 +44,10 @@ public class LanguageService {
     }
 
     public LanguageDto putLanguage(LanguageDto newData, Long id){
+        isDuplicate(newData.getCode());
         var language = languageRepository.findById(id)
                 .map(languageEntity -> {
-                    languageEntity.setCode(isDuplicate(newData.getCode()));
+                    languageEntity.setCode(newData.getCode());
                     return languageRepository.save(languageEntity);
                 })
                 .orElseGet(() -> {
@@ -65,10 +66,8 @@ public class LanguageService {
         return languageEntityToDto(language);
     }
 
-    private String isDuplicate(String code){
-        if(languageRepository.findByCodeEqualsIgnoreCase(code).isEmpty()){
-            return code;
-        } else {
+    private void isDuplicate(String code){
+        if(!languageRepository.findByCodeEqualsIgnoreCase(code).isEmpty()){
             var duplicateErrorMassage = "Language '%s' already exists";
             throw new DuplicateException(String.format(duplicateErrorMassage, code));
         }

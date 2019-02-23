@@ -3,6 +3,7 @@ package pl.dawidh.pierce.service;
 import org.springframework.stereotype.Service;
 import pl.dawidh.pierce.controller.dto.OptionDto;
 import pl.dawidh.pierce.entity.AttributeEntity;
+import pl.dawidh.pierce.exception.DuplicateException;
 import pl.dawidh.pierce.exception.NotFoundException;
 import pl.dawidh.pierce.repository.OptionRepository;
 
@@ -15,9 +16,17 @@ import static pl.dawidh.pierce.utils.ModelParseUtils.*;
 public class OptionService {
     private final OptionRepository optionRepository;
 
+    public OptionService(OptionRepository optionRepository) {
+        this.optionRepository = optionRepository;
+    }
+
+    List<OptionDto> getOptions(){
+        return optionCollectionEntityToListDto(optionRepository.findAll());
+    }
+
     public List<OptionDto> getOptions(Long id, String code, String attributeCode){
         if(id != null){
-            Collections.singletonList(optionEntityToDto(optionRepository.findById(id).orElseThrow(() -> {
+            return Collections.singletonList(optionEntityToDto(optionRepository.findById(id).orElseThrow(() -> {
                 var notFoundMassage = "Option with id='%d' not found";
                 throw new NotFoundException(String.format(notFoundMassage, id));
             })));
@@ -30,20 +39,17 @@ public class OptionService {
         } else {
             return optionCollectionEntityToListDto(optionRepository.findAll());
         }
-        return null;
-    }
-
-    public OptionService(OptionRepository optionRepository) {
-        this.optionRepository = optionRepository;
     }
 
     public OptionDto saveOption(OptionDto optionDto){
+        isDuplicate(optionDto.getCode(), optionDto.getAttributeId());
         var newOption = optionDtoToEntity(optionDto);
         var savedOption = optionRepository.save(newOption);
         return optionEntityToDto(savedOption);
     }
 
     public OptionDto putOption(OptionDto newData, Long id){
+        isDuplicate(newData.getCode(), newData.getAttributeId());
         var option = optionRepository.findById(id)
                 .map(optionEntity -> {
                     optionEntity.setCode(newData.getCode());
@@ -62,5 +68,12 @@ public class OptionService {
         });
         optionRepository.delete(option);
         return optionEntityToDto(option);
+    }
+
+    private void isDuplicate(String code, Long attributeId){
+        if(!optionRepository.findByCodeAndAttributeId(code, attributeId).isEmpty()){
+            var duplicateErrorMassage = "Option '%s' with attribute '%d' id already exists";
+            throw new DuplicateException(String.format(duplicateErrorMassage, code, attributeId));
+        }
     }
 }
