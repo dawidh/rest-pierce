@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.*;
 import pl.dawidh.pierce.controller.dto.LanguageDto;
 import pl.dawidh.pierce.service.LanguageService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController
@@ -22,5 +23,21 @@ public class LanguageController {
     List<LanguageDto> getLanguages(@PathVariable(required = false) Long id,
                                    @RequestParam(required = false) String code){
         return languageService.getLanguages(id, code);
+    }
+
+    @PostMapping
+    private LanguageDto addLanguage(@Valid @RequestBody LanguageDto newLanguage) {
+        return languageService.saveLanguage(newLanguage);
+    }
+
+    @PutMapping(path = {"", "/{id}"})
+    private LanguageDto putLanguage(@Valid @RequestBody LanguageDto newData,
+                                    @PathVariable(required = false) Long id) {
+        return languageService.putLanguage(newData, id);
+    }
+
+    @DeleteMapping("/{id}")
+    private LanguageDto deleteLanguage(@PathVariable Long id) {
+        return languageService.deleteLanguage(id);
     }
 }

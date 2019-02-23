@@ -1,11 +1,15 @@
 package pl.dawidh.pierce.controller.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.time.LocalDateTime;
 
 public abstract class BaseData {
     protected Long id;
-    protected LocalDateTime created;
-    protected LocalDateTime modified;
+    @JsonFormat(pattern="yyyy-MM-dd hh:mm")
+    LocalDateTime created;
+    @JsonFormat(pattern="yyyy-MM-dd hh:mm")
+    LocalDateTime modified;
 
     public Long getId() {
         return id;

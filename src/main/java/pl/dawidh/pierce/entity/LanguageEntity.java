@@ -1,7 +1,7 @@
 package pl.dawidh.pierce.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -13,8 +13,11 @@ public class LanguageEntity extends BaseData {
     @NotNull
     private String code;
 
-    @OneToMany(mappedBy = "language", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL)
     private Collection<AttributeTranslationEntity> attributeTranslations;
+
+    @OneToMany(mappedBy = "language", cascade = CascadeType.ALL)
+    private Collection<OptionTranslationEntity> optionTranslations;
 
     public LanguageEntity() {
     }
@@ -25,11 +28,6 @@ public class LanguageEntity extends BaseData {
 
     public LanguageEntity(@NotNull String code) {
         this.code = code;
-    }
-
-    public LanguageEntity(@NotNull String code, Collection<AttributeTranslationEntity> attributeTranslations) {
-        this.code = code;
-        this.attributeTranslations = attributeTranslations;
     }
 
     public String getCode() {
@@ -46,5 +44,13 @@ public class LanguageEntity extends BaseData {
 
     public void setAttributeTranslations(Collection<AttributeTranslationEntity> attributeTranslations) {
         this.attributeTranslations = attributeTranslations;
+    }
+
+    public Collection<OptionTranslationEntity> getOptionTranslations() {
+        return optionTranslations;
+    }
+
+    public void setOptionTranslations(Collection<OptionTranslationEntity> optionTranslations) {
+        this.optionTranslations = optionTranslations;
     }
 }

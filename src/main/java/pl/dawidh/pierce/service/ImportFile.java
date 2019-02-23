@@ -21,10 +21,6 @@ public class ImportFile {
     private static final Logger log = LoggerFactory.getLogger(ImportFile.class);
     private final String noFileMassage = "No file '%s'";
     private final String savedNewLanguageMassage = "A new language has been saved %s";
-    private final String savedNewAttributeMassage = "A new attribute has been saved %s";
-    private final String savedNewAttributeTranslationMassage = "A new translation has been saved for the '%s' attribute: %s";
-    private final String savedNewOptionTranslationMassage = "A new translation has been saved for the '%s' option: %s";
-    private final String savedNewOptionMassage = "A new option has been saved %s";
     private final String attributeCode = "attribute";
     private final String codeCode = "code";
     private final String sortOrderCode = "sort_order";
@@ -75,6 +71,14 @@ public class ImportFile {
             extractData(file);
         } catch (Exception e) {
             log.error(e.getMessage());
+        } finally {
+            if(file.delete()){
+                var fileDeleteMassage = "File '%s' deleted";
+                log.info(String.format(fileDeleteMassage, file.getName()));
+            } else {
+                var fileDeleteMassage = "Delete '%s' file operation is failed";
+                log.info(String.format(fileDeleteMassage, file.getName()));
+            }
         }
     }
 
@@ -170,7 +174,8 @@ public class ImportFile {
         return options.stream()
                 .filter(option -> option.getCode().equals(optionCode) && option.getAttributeId().equals(attributeId))
                 .findFirst().orElseThrow(() -> {
-                    throw new NotFoundException();
+                    var notFoundMassage = "Option '%s' with attribute_id '%d' not found";
+                    throw new NotFoundException(String.format(notFoundMassage, optionCode, attributeId));
                 });
     }
 
@@ -178,7 +183,8 @@ public class ImportFile {
         return languages.stream()
                 .filter(language -> language.getCode().equals(languageCode))
                 .findFirst().orElseThrow(() -> {
-                    throw new NotFoundException();
+                    var notFoundMassage = "Language '%s' not found";
+                    throw new NotFoundException(String.format(notFoundMassage, languageCode));
                 });
     }
 
@@ -186,7 +192,8 @@ public class ImportFile {
         return attributes.stream()
                 .filter(attribute -> attribute.getCode().equals(attributeCode))
                 .findFirst().orElseThrow(() -> {
-                    throw new NotFoundException();
+                    var notFoundMassage = "Attribute '%s' not found";
+                    throw new NotFoundException(String.format(notFoundMassage, attributeCode));
                 });
     }
 
@@ -200,6 +207,7 @@ public class ImportFile {
             var newAttribute = new AttributeDto(newData);
             newAttribute = attributeService.saveAttribute(newAttribute);
             existingAttributes.add(newAttribute);
+            var savedNewAttributeMassage = "A new attribute has been saved %s";
             log.info(String.format(savedNewAttributeMassage, newAttribute.newRecordToString()));
         }
         return existingAttributes;
@@ -208,6 +216,7 @@ public class ImportFile {
     private void findAndAddAttributeTranslations(LanguageDto language, AttributeDto attribute, String translation){
         var newAttributeTranslation = new AttributeTranslationDto(language.getId(), attribute.getId(), translation);
         newAttributeTranslation = attributeTranslationService.saveAttributeTranslation(newAttributeTranslation);
+        var savedNewAttributeTranslationMassage = "A new translation has been saved for the '%s' attribute: %s";
         log.info(String.format(savedNewAttributeTranslationMassage, attribute.getCode(), newAttributeTranslation.newRecordToString()));
     }
 
@@ -220,6 +229,7 @@ public class ImportFile {
         if(!optionExist){
             var newOption = optionService.saveOption(option);
             existingOptions.add(newOption);
+            var savedNewOptionMassage = "A new option has been saved %s";
             log.info(String.format(savedNewOptionMassage, newOption.newRecordToString()));
         }
         return existingOptions;
@@ -228,6 +238,7 @@ public class ImportFile {
     private void findAndAddOptionTranslations(LanguageDto language, OptionDto option, String translation){
         var newOptionTranslation = new OptionTranslationDto(language.getId(), option.getId(), translation);
         newOptionTranslation = optionTranslationService.saveOptionTranslation(newOptionTranslation);
+        var savedNewOptionTranslationMassage = "A new translation has been saved for the '%s' option: %s";
         log.info(String.format(savedNewOptionTranslationMassage, option.getCode(), newOptionTranslation.newRecordToString()));
     }
 }

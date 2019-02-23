@@ -22,6 +22,9 @@ public class OptionTranslationEntity extends BaseData {
     @NotNull
     private String translate;
 
+    public OptionTranslationEntity() {
+    }
+
     public OptionTranslationEntity(@NotNull LanguageEntity language,
                                    @NotNull OptionEntity option,
                                    @NotNull String translate) {

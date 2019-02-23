@@ -1,9 +1,9 @@
 package pl.dawidh.pierce.entity;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
+
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Collection;
 
@@ -13,7 +13,8 @@ public class AttributeEntity extends BaseData {
     @NotNull
     private String code;
 
-    @OneToMany(mappedBy = "attribute", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "attribute")
+    @LazyCollection(LazyCollectionOption.FALSE)
     private Collection<AttributeTranslationEntity> attributeTranslations;
 
     public AttributeEntity() {

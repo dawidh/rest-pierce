@@ -13,6 +13,9 @@ public class OptionDto extends BaseData {
     @NotNull
     private Integer sortOrder;
 
+    public OptionDto() {
+    }
+
     public OptionDto(@NotNull String code) {
         this.code = code;
     }
