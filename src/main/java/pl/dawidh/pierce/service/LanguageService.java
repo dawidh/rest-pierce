@@ -49,7 +49,10 @@ public class LanguageService {
                     languageEntity.setCode(isDuplicate(newData.getCode()));
                     return languageRepository.save(languageEntity);
                 })
-                .orElseGet(() -> languageRepository.save(languageDtoToEntity(newData)));
+                .orElseGet(() -> {
+                    isDuplicate(newData.getCode());
+                    return languageRepository.save(languageDtoToEntity(newData));
+                });
         return languageEntityToDto(language);
     }
 

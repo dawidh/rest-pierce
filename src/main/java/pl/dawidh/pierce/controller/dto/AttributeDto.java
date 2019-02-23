@@ -10,6 +10,9 @@ public class AttributeDto extends BaseData {
 
     private Collection<AttributeTranslationDto> attributeTranslations;
 
+    public AttributeDto() {
+    }
+
     public AttributeDto(@NotNull String code) {
         this.code = code;
     }

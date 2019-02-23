@@ -9,7 +9,6 @@ import pl.dawidh.pierce.repository.AttributeRepository;
 import java.util.Collections;
 import java.util.List;
 
-import static pl.dawidh.pierce.utils.DateUtils.localDateTimeToTimestamp;
 import static pl.dawidh.pierce.utils.ModelParseUtils.*;
 
 @Service
