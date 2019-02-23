@@ -38,4 +38,19 @@ public class LanguageEntity extends BaseData {
         this.code = code;
     }
 
+    public Collection<AttributeTranslationEntity> getAttributeTranslations() {
+        return attributeTranslations;
+    }
+
+    public void setAttributeTranslations(Collection<AttributeTranslationEntity> attributeTranslations) {
+        this.attributeTranslations = attributeTranslations;
+    }
+
+    public Collection<OptionTranslationEntity> getOptionTranslations() {
+        return optionTranslations;
+    }
+
+    public void setOptionTranslations(Collection<OptionTranslationEntity> optionTranslations) {
+        this.optionTranslations = optionTranslations;
+    }
 }

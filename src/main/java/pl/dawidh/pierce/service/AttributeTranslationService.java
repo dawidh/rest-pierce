@@ -64,4 +64,8 @@ public class AttributeTranslationService {
         return attributeTranslationEntityToDto(attributeTranslation);
     }
 
+    public void deleteAttributeTranslationsByAttributeId(Long attributeId){
+        attributeTranslationRepository.deleteAllByAttribute_Id(attributeId);
+    }
+
 }

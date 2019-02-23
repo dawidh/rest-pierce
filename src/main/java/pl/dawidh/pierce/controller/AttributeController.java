@@ -42,6 +42,7 @@ public class AttributeController {
 
     @DeleteMapping("/{id}")
     private AttributeDto deleteAttribute(@PathVariable Long id) {
+        attributeTranslationService.deleteAttributeTranslationsByAttributeId(id);
         return attributeService.deleteAttribute(id);
     }
 

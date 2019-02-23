@@ -13,6 +13,9 @@ public class AttributeTranslationDto extends BaseData {
     @NotNull
     private String translate;
 
+    public AttributeTranslationDto() {
+    }
+
     public AttributeTranslationDto(Long id,
                                    LocalDateTime created,
                                    LocalDateTime modified,
