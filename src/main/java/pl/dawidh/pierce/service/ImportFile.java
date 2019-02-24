@@ -98,8 +98,8 @@ public class ImportFile {
                 addNewDataByFile(file.getName(), loadedLine, languages, headers);
                 loadedLine.clear();
             }
-
         });
+        reader.close();
     }
 
     private List<LanguageDto> findAndAddNewLanguage(Collection<String> newData){
