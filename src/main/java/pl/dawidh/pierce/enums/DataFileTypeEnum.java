@@ -13,6 +13,10 @@ public enum DataFileTypeEnum {
         this.fileData = fileData;
     }
 
+    public String getFileData() {
+        return fileData;
+    }
+
     public static DataFileTypeEnum getDataTypeField(String fileData) {
         return Arrays.stream(values())
                 .filter(guestEnum -> guestEnum.fileData.equals(fileData))

@@ -37,9 +37,6 @@ public class ImportFile {
     @Value("${import.file.path}")
     private String filePath;
 
-    @Value("${import.file.files}")
-    private String fileNames;
-
     public ImportFile(AttributeService attributeService,
                       AttributeTranslationService attributeTranslationService,
                       LanguageService languageService,
@@ -53,8 +50,8 @@ public class ImportFile {
     }
 
     public void runFileImport(){
-        Arrays.stream(fileNames.split(String.valueOf(splitSeparator)))
-                .map(fileName -> filePath + fileName)
+        Arrays.stream(DataFileTypeEnum.values())
+                .map(fileName -> filePath + fileName.getFileData())
                 .collect(Collectors.toList())
                 .forEach(e -> {
                     var file = new File(e);

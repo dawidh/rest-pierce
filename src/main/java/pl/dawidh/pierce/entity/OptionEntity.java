@@ -68,12 +68,4 @@ public class OptionEntity extends BaseData{
     public void setSortOrder(Integer sortOrder) {
         this.sortOrder = sortOrder;
     }
-
-    public Collection<OptionTranslationEntity> getAttributeTranslations() {
-        return optionTranslations;
-    }
-
-    public void setAttributeTranslations(Collection<OptionTranslationEntity> optionTranslations) {
-        this.optionTranslations = optionTranslations;
-    }
 }

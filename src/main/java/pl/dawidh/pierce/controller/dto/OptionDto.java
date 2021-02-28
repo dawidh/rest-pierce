@@ -54,16 +54,8 @@ public class OptionDto extends BaseData {
         return attributeId;
     }
 
-    public void setAttributeId(Long attributeId) {
-        this.attributeId = attributeId;
-    }
-
     public Integer getSortOrder() {
         return sortOrder;
-    }
-
-    public void setSortOrder(Integer sortOrder) {
-        this.sortOrder = sortOrder;
     }
 
     public String newRecordToString() {

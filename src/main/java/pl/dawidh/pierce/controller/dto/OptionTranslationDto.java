@@ -42,24 +42,12 @@ public class OptionTranslationDto extends BaseData {
         return languageId;
     }
 
-    public void setLanguageId(Long languageId) {
-        this.languageId = languageId;
-    }
-
     public Long getOptionId() {
         return optionId;
     }
 
-    public void setOptionId(Long optionId) {
-        this.optionId = optionId;
-    }
-
     public String getTranslate() {
         return translate;
-    }
-
-    public void setTranslate(String translate) {
-        this.translate = translate;
     }
 
     public String newRecordToString() {

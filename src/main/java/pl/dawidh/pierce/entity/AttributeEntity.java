@@ -45,8 +45,4 @@ public class AttributeEntity extends BaseData {
     public Collection<AttributeTranslationEntity> getAttributeTranslations() {
         return attributeTranslations;
     }
-
-    public void setAttributeTranslations(Collection<AttributeTranslationEntity> attributeTranslations) {
-        this.attributeTranslations = attributeTranslations;
-    }
 }

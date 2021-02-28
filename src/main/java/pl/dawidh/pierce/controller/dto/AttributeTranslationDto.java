@@ -42,24 +42,12 @@ public class AttributeTranslationDto extends BaseData {
         return languageId;
     }
 
-    public void setLanguageId(Long languageId) {
-        this.languageId = languageId;
-    }
-
     public Long getAttributeId() {
         return attributeId;
     }
 
-    public void setAttributeId(Long attributeId) {
-        this.attributeId = attributeId;
-    }
-
     public String getTranslate() {
         return translate;
-    }
-
-    public void setTranslate(String translate) {
-        this.translate = translate;
     }
 
     public String newRecordToString() {

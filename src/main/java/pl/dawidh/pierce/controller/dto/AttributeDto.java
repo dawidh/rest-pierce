@@ -51,10 +51,6 @@ public class AttributeDto extends BaseData {
         return attributeTranslations;
     }
 
-    public void setAttributeTranslations(Collection<AttributeTranslationDto> attributeTranslations) {
-        this.attributeTranslations = attributeTranslations;
-    }
-
     public String newRecordToString() {
         return String.format("'%s', id = '%d'", code, id);
     }

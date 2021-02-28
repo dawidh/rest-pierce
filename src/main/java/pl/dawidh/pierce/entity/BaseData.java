@@ -3,6 +3,7 @@ package pl.dawidh.pierce.entity;
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @MappedSuperclass
 public class BaseData {
@@ -11,10 +12,12 @@ public class BaseData {
     protected Long id;
 
     @Column(name = "created__")
-    protected Timestamp created;
+    @Temporal(TemporalType.TIMESTAMP)
+    protected Date created;
 
     @Column(name = "modified__")
-    protected Timestamp modified;
+    @Temporal(TemporalType.TIMESTAMP)
+    protected Date modified;
 
     @PrePersist
     public void prePersist() {
@@ -35,20 +38,11 @@ public class BaseData {
         this.id = id;
     }
 
-    public Timestamp getCreated() {
+    public Date getCreated() {
         return created;
     }
 
-    public void setCreated(Timestamp created) {
-        this.created = created;
-    }
-
-    public Timestamp getModified() {
+    public Date getModified() {
         return modified;
     }
-
-    public void setModified(Timestamp modified) {
-        this.modified = modified;
-    }
-
 }
